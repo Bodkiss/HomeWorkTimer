@@ -1,5 +1,6 @@
 package com.example.homeworktimer
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,6 +11,9 @@ import com.example.worktimer.JobModel
 interface MyDao {
     @Query("SELECT * from my_database ORDER BY courentDate ASC")
     fun getAlphabetizedTodoList(): List<JobModel>
+
+    @Query("SELECT * from my_database ORDER BY courentDate ASC")
+    fun getAlphabetizedTodoListLiveData(): LiveData<List<JobModel>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(jobModel: JobModel)

@@ -24,20 +24,13 @@ class ReportFragment : Fragment() {
 
     private lateinit var adapter: RecViewAdapter
 
-    private val dataModel:DataModel by activityViewModels()
-
-    private lateinit var model: EmployeeViewModel
-
-
-
-
-
+    private val dataModel: DataModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentReportBinding.inflate(inflater,container,false)
+        binding = FragmentReportBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -45,16 +38,13 @@ class ReportFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       /* val db = Room.databaseBuilder(
-            requireContext().applicationContext,
-            MyDatabase::class.java, "my_database"
-        ).allowMainThreadQueries().
-        build()
-        val userDao = db.userDao()
-        userDao.getAlphabetizedTodoList()*/
-
-        val modelfactory= MyViewModelFactory(requireContext().applicationContext as Application)
-        model = ViewModelProvider(this,modelfactory).get(EmployeeViewModel::class.java)
+        /* val db = Room.databaseBuilder(
+             requireContext().applicationContext,
+             MyDatabase::class.java, "my_database"
+         ).allowMainThreadQueries().
+         build()
+         val userDao = db.userDao()
+         userDao.getAlphabetizedTodoList()*/
 
         initRecView()
 
@@ -67,23 +57,14 @@ class ReportFragment : Fragment() {
         }
     }
 
-    private fun initRecView() = with(binding){
+    private fun initRecView() = with(binding) {
 
-
-        dataModel.fromTaskToReport.observe(activity as LifecycleOwner) {
-           // userDao.insert(it)
-           //
-            model.insert(it)
-            val users: List<JobModel> = model.allJobs
+        dataModel.jobModelListLiveData.observe(activity as LifecycleOwner) {
             rcWiew.layoutManager = LinearLayoutManager(activity)
             adapter = RecViewAdapter()
             rcWiew.adapter = adapter
-            adapter.submitList(users)
-           // userDao.getAlphabetizedTodoList()
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         }
-
-
     }
 
     companion object {
