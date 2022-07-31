@@ -4,7 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.worktimer.JobModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EmployeeViewModel public constructor(application: Application) : AndroidViewModel(application) {
 
@@ -12,6 +17,25 @@ class EmployeeViewModel public constructor(application: Application) : AndroidVi
     val allJobs: List<JobModel> = db.userDao().getAlphabetizedTodoList()
 
     fun insert(jobModel: JobModel) {
-        db.userDao().insert(jobModel)
+        viewModelScope.launch {
+
+            withContext(Dispatchers.IO){
+
+                db.userDao().insert(jobModel)
+                anotherSuspendFunction()
+                anotherSuspendFunction()
+                anotherSuspendFunction()
+                anotherSuspendFunction()
+                //mutableLiveData.post(data)
+            }
+
+            withContext(Dispatchers.Main){
+               // textView.text = ""
+            }
+        }
+    }
+
+    private suspend fun anotherSuspendFunction() {
+        //empty
     }
 }

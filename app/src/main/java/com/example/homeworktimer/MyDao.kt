@@ -16,7 +16,7 @@ interface MyDao {
     fun getAlphabetizedTodoListLiveData(): LiveData<List<JobModel>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(jobModel: JobModel)
+    suspend fun insert(jobModel: JobModel)
 
     @Query("DELETE FROM my_database")
     fun deleteAll()

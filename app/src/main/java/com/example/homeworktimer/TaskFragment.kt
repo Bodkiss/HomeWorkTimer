@@ -62,6 +62,7 @@ class TaskFragment : Fragment() {
         employeeViewModel.insert(jobModel)
     }
 
+
     companion object {
 
         fun newInstance() = TaskFragment()
