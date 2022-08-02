@@ -1,5 +1,6 @@
 package com.example.worktimer
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.example.homeworktimer.EmployeeViewModel
 import com.example.homeworktimer.MyDao
 import com.example.homeworktimer.MyDatabase
+import com.example.homeworktimer.MyViewModelFactory
 import com.example.homeworktimer.databinding.FragmentReportBinding
 
 
@@ -21,6 +25,8 @@ class ReportFragment : Fragment() {
     private lateinit var adapter: RecViewAdapter
 
     private val dataModel:DataModel by activityViewModels()
+
+    private lateinit var model: EmployeeViewModel
 
 
 
@@ -39,36 +45,41 @@ class ReportFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val db = Room.databaseBuilder(
+       /* val db = Room.databaseBuilder(
             requireContext().applicationContext,
             MyDatabase::class.java, "my_database"
         ).allowMainThreadQueries().
         build()
         val userDao = db.userDao()
-        userDao.getAlphabetizedTodoList()
+        userDao.getAlphabetizedTodoList()*/
 
+        val modelfactory= MyViewModelFactory(requireContext().applicationContext as Application)
+        model = ViewModelProvider(this,modelfactory).get(EmployeeViewModel::class.java)
 
-        initRecView(userDao)
+        initRecView()
 
 
         binding.buttonClearAll.setOnClickListener {
-            userDao.deleteAll()
-        userDao.getAlphabetizedTodoList()
+            /*userDao.deleteAll()
+        userDao.getAlphabetizedTodoList()*/
+
 
         }
     }
 
-    private fun initRecView(userDao: MyDao) = with(binding){
+    private fun initRecView() = with(binding){
 
 
         dataModel.fromTaskToReport.observe(activity as LifecycleOwner) {
-            userDao.insert(it)
-            val users: List<JobModel> = userDao.getAlphabetizedTodoList()
+           // userDao.insert(it)
+           //
+            model.insert(it)
+            val users: List<JobModel> = model.allJobs
             rcWiew.layoutManager = LinearLayoutManager(activity)
             adapter = RecViewAdapter()
             rcWiew.adapter = adapter
             adapter.submitList(users)
-            userDao.getAlphabetizedTodoList()
+           // userDao.getAlphabetizedTodoList()
             adapter.notifyDataSetChanged()
         }
 
